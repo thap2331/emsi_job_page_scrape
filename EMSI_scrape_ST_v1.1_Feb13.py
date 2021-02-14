@@ -3,7 +3,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -20,15 +19,11 @@ content = driver.find_element_by_xpath('//p[contains(text(), "Browse current job
 content.click()
 html_page = driver.page_source
 
-
 #columns for our final dataframe
 columns = ['position_title', 'Position_category', 'Part_or_Full_time', 'Location', 'description', 'core_responsibilities',
            'Organizational Relationships', 'Knowledge, Skills, and Abilities', 'Key Skills', 'preferred_skills',
            'Traits','Credentials and Experience', 'application_requirements', 'optional_application_requirements',
            'Physical Requirements / Work Environment', 'link_to_apply' ]
-
-
-
 
 #Aggregate similar columns
 responsibilities_columns = ['Daily Responsibilities', 'Core Responsibilities', 'Responsibilities', 'Job Responsibilities',
@@ -43,7 +38,6 @@ preferred_skills_columns = ['Great candidates also have', 'Preferred Qualificati
                             'Great candidates also have…', 'Specific Qualifications']
 traits_columns = ['People who succeed in this position are', 'Traits', 'People who succeed in this position are...']
 work_env_columns = ['Physical Requirment/Work Environment', 'Physical Requirements / Work Environment']
-
 
 #build function to scrape
 def insert_html(html_page_input):
