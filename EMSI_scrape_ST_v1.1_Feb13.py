@@ -3,6 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import numpy as np
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -21,10 +22,10 @@ html_page = driver.page_source
 driver.close()
 
 #columns for our final dataframe
-columns = ['position_title', 'Position_category', 'Part_or_Full_time', 'Location', 'description', 'core_responsibilities',
+columns = ['company', 'id', 'position_title', 'Position_category', 'Part_or_Full_time', 'Location', 'description', 'core_responsibilities',
            'Organizational Relationships', 'Knowledge, Skills, and Abilities', 'Key Skills', 'preferred_skills',
            'Traits','Credentials and Experience', 'application_requirements', 'optional_application_requirements',
-           'Physical Requirements / Work Environment', 'link_to_apply' ]
+           'Physical Requirements / Work Environment', 'job_link', 'link_to_apply' ]
 
 #Aggregate similar columns
 responsibilities_columns = ['Daily Responsibilities', 'Core Responsibilities', 'Responsibilities', 'Job Responsibilities',
@@ -56,6 +57,8 @@ def insert_html(html_page_input):
         data_dic['position_title'] = page_soup.find(class_='posting-headline').find('h2').text
         data_dic['loc_type_position_time'] = (page_soup.find(class_='posting-categories').text)
         data_dic['description'] = (page_soup.find(class_='section page-centered').text)
+        data_dic['job_link'] = links
+        data_dic['company'] = 'EMSI'
 
         #Getting column names
         for i in page_soup.find_all(class_='section page-centered'):
@@ -118,13 +121,15 @@ def insert_html(html_page_input):
     dataframe.drop(columns={'loc_type_position_time'}, inplace=True)
     #print(dataframe.columns)
 
+    #Generate an id column
+    dataframe['id'] = np.arange(dataframe.shape[0])
     #Reorder columns and replace one of the error manyally
     dataframe = dataframe[columns]
     dataframe.iloc[7,4] = dataframe.iloc[7,4].replace('Location: Moscow, ID', "")
 
-    #Save it to json (string) format
+    #Save it to json (string) format and excel
     dataframe.to_json('emsi_job_lists.json')
-    dataframe.to_excel('emsi_job_dataframe.xlsx')
+    dataframe.to_excel('emsi_job_dataframe.xlsx', index=False)
 
     return data_dic, dataframe
 
