@@ -1,9 +1,7 @@
-# emsi_job_page_scrape
-Scraping EMSI job web page
-
+# Scraping EMSI job web page
 ## This is a scraper to scrape jobs from EMSO job website.
 
-### There are various columns which are identical, but differnt in wordings. So, I created columns which would mean the same thing. For example, columns "Key Skills" and "Candidates must have" are converted into "Key Skills." the information below shows which columns are merged into the same columns.
+#### There are various columns which are identical, but differnt in wordings. So, I created columns which would mean the same thing. For example, columns "Key Skills" and "Candidates must have" are converted into "Key Skills." the information below shows which columns are merged into the same columns.
   responsibilities_columns = ['Daily Responsibilities', 'Core Responsibilities', 'Responsibilities', 'Job Responsibilities',
                            'Job Duties and Responsibilities']
   knowledge_columns = ['Knowledge, Skills and Abilities', 'Knowledge, Skills, and Abilities',
@@ -17,4 +15,4 @@ Scraping EMSI job web page
   traits_columns = ['People who succeed in this position are', 'Traits', 'People who succeed in this position are...']
   work_env_columns = ['Physical Requirment/Work Environment', 'Physical Requirements / Work Environment']
 
-### hsjs
+#### hsjs
