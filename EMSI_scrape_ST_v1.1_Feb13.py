@@ -18,6 +18,7 @@ about.click()
 content = driver.find_element_by_xpath('//p[contains(text(), "Browse current job openings")]')
 content.click()
 html_page = driver.page_source
+driver.close()
 
 #columns for our final dataframe
 columns = ['position_title', 'Position_category', 'Part_or_Full_time', 'Location', 'description', 'core_responsibilities',
@@ -41,7 +42,7 @@ work_env_columns = ['Physical Requirment/Work Environment', 'Physical Requiremen
 
 #build function to scrape
 def insert_html(html_page_input):
-    soup = BeautifulSoup(html_page_input)
+    soup = BeautifulSoup(html_page_input, 'lxml')
     all_jobs = soup.find_all('div', class_='job')
     job_links = list(map(lambda x: x.a['href'], all_jobs))
     job_links = job_links[0:-1] #Getting rid of last link as it is not a job page
@@ -51,7 +52,7 @@ def insert_html(html_page_input):
     for links in job_links:
         #print(links, '\n')
         data_dic = {}
-        page_soup = BeautifulSoup(requests.get(links).content)
+        page_soup = BeautifulSoup(requests.get(links).content, 'lxml')
         data_dic['position_title'] = page_soup.find(class_='posting-headline').find('h2').text
         data_dic['loc_type_position_time'] = (page_soup.find(class_='posting-categories').text)
         data_dic['description'] = (page_soup.find(class_='section page-centered').text)
@@ -115,7 +116,7 @@ def insert_html(html_page_input):
     #Split Location, position, and full or part time position column
     dataframe[['Location','Position_category', 'Part_or_Full_time']] = dataframe['loc_type_position_time'].str.split("/", expand=True)
     dataframe.drop(columns={'loc_type_position_time'}, inplace=True)
-    print(dataframe.columns)
+    #print(dataframe.columns)
 
     #Reorder columns and replace one of the error manyally
     dataframe = dataframe[columns]
@@ -123,6 +124,7 @@ def insert_html(html_page_input):
 
     #Save it to json (string) format
     dataframe.to_json('emsi_job_lists.json')
+    dataframe.to_excel('emsi_job_dataframe.xlsx')
 
     return data_dic, dataframe
 
